@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odin Admin — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== Animated background: night sky + running fox ===== -->
+<div class="scene" aria-hidden="true">
+  <div class="stars"></div>
+  <div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
+  <div class="moon"></div>
+  <div class="grid-floor"></div>
+  <div class="fox-run">
+    <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fur" x1="0" x2="1"><stop offset="0" stop-color="#e2581c"/><stop offset="1" stop-color="#ff8c3a"/></linearGradient>
+        <linearGradient id="fur-dark" x1="0" x2="1"><stop offset="0" stop-color="#a83e10"/><stop offset="1" stop-color="#d4561a"/></linearGradient>
+      </defs>
+      <ellipse class="shadow" cx="290" cy="305" rx="170" ry="10" fill="#000" opacity=".35"/>
+      <g class="tail"><path d="M140 150 C60 160 10 110 25 40 C60 75 110 85 170 122Z" fill="url(#fur)"/><path d="M25 40 C8 75 20 112 52 122 C58 90 46 62 25 40Z" fill="#fff4e6"/></g>
+      <g class="leg l2"><path d="M205 190 L232 190 L226 285 L206 285Z" fill="url(#fur-dark)"/><rect x="200" y="278" width="34" height="14" rx="6" fill="#2a1406"/></g>
+      <g class="leg l4"><path d="M345 190 L372 190 L366 285 L346 285Z" fill="url(#fur-dark)"/><rect x="340" y="278" width="34" height="14" rx="6" fill="#2a1406"/></g>
+      <ellipse cx="270" cy="160" rx="138" ry="56" fill="url(#fur)"/>
+      <ellipse cx="382" cy="188" rx="48" ry="30" fill="#fff4e6"/>
+      <g class="leg l1"><path d="M170 190 L198 190 L190 285 L170 285Z" fill="#c24a14"/><rect x="164" y="278" width="34" height="14" rx="6" fill="#2a1406"/></g>
+      <g class="leg l3"><path d="M312 190 L340 190 L332 285 L312 285Z" fill="#c24a14"/><rect x="306" y="278" width="34" height="14" rx="6" fill="#2a1406"/></g>
+      <path d="M410 100 L420 46 L452 92Z" fill="url(#fur)"/><path d="M418 92 L423 64 L440 90Z" fill="#2a1406"/>
+      <path d="M452 88 L482 44 L492 100Z" fill="url(#fur)"/><path d="M462 92 L479 64 L484 96Z" fill="#2a1406"/>
+      <path d="M390 130 C400 88 455 84 505 118 L570 150 L508 170 C470 185 420 182 395 160Z" fill="#ff8c3a"/>
+      <path d="M468 160 C500 148 535 154 566 152 L508 172 C490 176 474 171 468 160Z" fill="#fff4e6"/>
+      <circle cx="568" cy="150" r="7" fill="#1a0c04"/><circle cx="488" cy="126" r="5.5" fill="#1a0c04"/><circle cx="490" cy="124" r="1.6" fill="#fff"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ===== Icon sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g-fox" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff4d7d"/></linearGradient>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-task" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.6"/></symbol>
+    <symbol id="i-set" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-money" viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6zM13 5v14"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2c4 2 6 6 6 10l-3 3H9l-3-3c0-4 2-8 6-10zM9 15l-2 5 5-2M15 15l2 5-5-2"/><circle cx="12" cy="9" r="1.5"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo">🦊</span>
+      <span class="brand-name">Odin Admin<small>Workspace</small></span>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-label">Overview</span>
+      <a href="#" class="nav-link active"><svg class="icon"><use href="#i-home"/></svg>Dashboard</a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-chart"/></svg>Analytics</a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-folder"/></svg>Projects<span class="count">12</span></a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-task"/></svg>Tasks<span class="count">48</span></a>
+      <span class="nav-label">Workspace</span>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-cal"/></svg>Calendar</a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-msg"/></svg>Messages<span class="count">5</span></a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-users"/></svg>Team</a>
+      <a href="#" class="nav-link"><svg class="icon"><use href="#i-set"/></svg>Settings</a>
+    </nav>
+
+    <div class="upgrade">
+      <strong>Storage 72% full</strong>
+      <p>Upgrade to Pro for unlimited space and priority support.</p>
+      <div class="bar"><span style="--w:72%"></span></div>
+    </div>
+  </aside>
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <label class="search">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <input type="search" placeholder="Search projects, people, tasks…">
+      <kbd>⌘K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="btn primary"><svg class="icon"><use href="#i-plus"/></svg><span>New project</span></button>
+      <button class="icon-btn" aria-label="Notifications"><svg class="icon"><use href="#i-bell"/></svg><span class="dot"></span></button>
+      <div class="user">
+        <span class="avatar">SR</span>
+        <div class="user-text"><strong>Sriram</strong><small>Admin</small></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main bento grid ===== -->
+  <main class="main">
+
+    <section class="welcome" style="--i:0">
+      <div>
+        <span class="eyebrow" id="greet-date">Tuesday, Oct 20</span>
+        <h1><span id="greet">Good afternoon</span>, Sriram 👋</h1>
+        <p>You have 3 tasks due this week and 2 new announcements. Revenue is up 12.5% — nice work.</p>
+      </div>
+      <div class="stats">
+        <div><strong>12</strong><small>Projects</small></div>
+        <div><strong>48</strong><small>Tasks</small></div>
+        <div><strong>9</strong><small>Teammates</small></div>
+      </div>
+    </section>
+
+    <section class="kpis">
+      <article class="kpi" style="--i:1;--accent:#ff7a2f">
+        <div class="kpi-top"><span class="kpi-icon"><svg class="icon"><use href="#i-money"/></svg></span><span class="trend up">▲ 12.5%</span></div>
+        <strong class="kpi-value" data-count="48.2" data-prefix="$" data-suffix="k">$48.2k</strong>
+        <small>Revenue this month</small>
+        <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline pathLength="1" points="0,26 14,20 28,23 42,12 56,16 70,7 84,10 100,3"/></svg>
+      </article>
+      <article class="kpi" style="--i:2;--accent:#4f8cff">
+        <div class="kpi-top"><span class="kpi-icon"><svg class="icon"><use href="#i-user"/></svg></span><span class="trend up">▲ 8.1%</span></div>
+        <strong class="kpi-value" data-count="2340">2,340</strong>
+        <small>New users</small>
+        <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline pathLength="1" points="0,24 14,22 28,25 42,17 56,19 70,11 84,13 100,6"/></svg>
+      </article>
+      <article class="kpi" style="--i:3;--accent:#38e0a6">
+        <div class="kpi-top"><span class="kpi-icon"><svg class="icon"><use href="#i-rocket"/></svg></span><span class="trend up">▲ 2 new</span></div>
+        <strong class="kpi-value" data-count="12">12</strong>
+        <small>Active projects</small>
+        <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline pathLength="1" points="0,20 14,22 28,16 42,18 56,12 70,14 84,8 100,9"/></svg>
+      </article>
+      <article class="kpi" style="--i:4;--accent:#ff4d7d">
+        <div class="kpi-top"><span class="kpi-icon"><svg class="icon"><use href="#i-ticket"/></svg></span><span class="trend down">▼ 4.3%</span></div>
+        <strong class="kpi-value" data-count="37">37</strong>
+        <small>Open tickets</small>
+        <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline pathLength="1" points="0,6 14,10 28,8 42,15 56,13 70,20 84,18 100,26"/></svg>
+      </article>
+    </section>
+
+    <section class="panel chart" style="--i:5">
+      <div class="panel-head"><h2>Weekly revenue</h2><span class="pill">Last 7 days</span></div>
+      <div class="chart-body">
+        <div class="bars">
+          <div class="b" style="--h:45%;--d:0"><span class="tip">$22.5k</span><i></i><small>Mon</small></div>
+          <div class="b" style="--h:62%;--d:1"><span class="tip">$31.0k</span><i></i><small>Tue</small></div>
+          <div class="b" style="--h:54%;--d:2"><span class="tip">$27.0k</span><i></i><small>Wed</small></div>
+          <div class="b" style="--h:78%;--d:3"><span class="tip">$39.0k</span><i></i><small>Thu</small></div>
+          <div class="b" style="--h:70%;--d:4"><span class="tip">$35.0k</span><i></i><small>Fri</small></div>
+          <div class="b" style="--h:38%;--d:5"><span class="tip">$19.0k</span><i></i><small>Sat</small></div>
+          <div class="b" style="--h:88%;--d:6"><span class="tip">$44.0k</span><i></i><small>Sun</small></div>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut"><div><strong>74%</strong><small>On track</small></div></div>
+          <ul class="legend">
+            <li><i style="background:var(--fox)"></i>In progress<b>45%</b></li>
+            <li><i style="background:var(--pink)"></i>Review<b>25%</b></li>
+            <li><i style="background:var(--cyan)"></i>Done<b>20%</b></li>
+            <li><i style="background:rgba(255,255,255,.2)"></i>Backlog<b>10%</b></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel goal" style="--i:6">
+      <div class="panel-head"><h2>Quarterly goal</h2><span class="pill">Q4</span></div>
+      <div class="ring">
+        <svg viewBox="0 0 160 160"><circle class="track" cx="80" cy="80" r="70"/><circle class="val" cx="80" cy="80" r="70"/></svg>
+        <div class="center"><strong>75%</strong><small>$150k of $200k</small></div>
+      </div>
+      <div class="goal-meta">
+        <div><small>Days left</small><strong>72</strong></div>
+        <div><small>Daily target</small><strong>$694</strong></div>
+      </div>
+    </section>
+
+    <section class="panel heat" style="--i:7">
+      <div class="panel-head"><h2>Team activity</h2><span class="pill">18 weeks</span></div>
+      <div class="heatmap"><span style="--v:0.00;--k:0"></span><span style="--v:0.15;--k:1"></span><span style="--v:0.00;--k:2"></span><span style="--v:0.70;--k:3"></span><span style="--v:0.30;--k:4"></span><span style="--v:0.30;--k:5"></span><span style="--v:0.00;--k:6"></span><span style="--v:0.00;--k:7"></span><span style="--v:0.00;--k:8"></span><span style="--v:0.00;--k:9"></span><span style="--v:0.30;--k:10"></span><span style="--v:0.50;--k:11"></span><span style="--v:0.15;--k:12"></span><span style="--v:1.00;--k:13"></span><span style="--v:1.00;--k:14"></span><span style="--v:0.00;--k:15"></span><span style="--v:0.00;--k:16"></span><span style="--v:0.50;--k:17"></span><span style="--v:0.50;--k:18"></span><span style="--v:0.15;--k:19"></span><span style="--v:0.15;--k:20"></span><span style="--v:1.00;--k:21"></span><span style="--v:0.00;--k:22"></span><span style="--v:1.00;--k:23"></span><span style="--v:0.00;--k:24"></span><span style="--v:0.15;--k:25"></span><span style="--v:0.00;--k:26"></span><span style="--v:0.00;--k:27"></span><span style="--v:1.00;--k:28"></span><span style="--v:0.70;--k:29"></span><span style="--v:1.00;--k:30"></span><span style="--v:0.15;--k:31"></span><span style="--v:1.00;--k:32"></span><span style="--v:0.15;--k:33"></span><span style="--v:0.00;--k:34"></span><span style="--v:0.00;--k:35"></span><span style="--v:0.15;--k:36"></span><span style="--v:0.15;--k:37"></span><span style="--v:0.70;--k:38"></span><span style="--v:1.00;--k:39"></span><span style="--v:0.70;--k:40"></span><span style="--v:1.00;--k:41"></span><span style="--v:1.00;--k:42"></span><span style="--v:0.15;--k:43"></span><span style="--v:0.00;--k:44"></span><span style="--v:1.00;--k:45"></span><span style="--v:0.50;--k:46"></span><span style="--v:0.15;--k:47"></span><span style="--v:0.70;--k:48"></span><span style="--v:0.30;--k:49"></span><span style="--v:0.50;--k:50"></span><span style="--v:0.00;--k:51"></span><span style="--v:0.00;--k:52"></span><span style="--v:0.00;--k:53"></span><span style="--v:0.30;--k:54"></span><span style="--v:0.15;--k:55"></span><span style="--v:0.00;--k:56"></span><span style="--v:1.00;--k:57"></span><span style="--v:1.00;--k:58"></span><span style="--v:0.50;--k:59"></span><span style="--v:1.00;--k:60"></span><span style="--v:0.15;--k:61"></span><span style="--v:0.00;--k:62"></span><span style="--v:0.15;--k:63"></span><span style="--v:0.50;--k:64"></span><span style="--v:0.70;--k:65"></span><span style="--v:0.15;--k:66"></span><span style="--v:1.00;--k:67"></span><span style="--v:1.00;--k:68"></span><span style="--v:0.50;--k:69"></span><span style="--v:0.00;--k:70"></span><span style="--v:0.30;--k:71"></span><span style="--v:0.30;--k:72"></span><span style="--v:0.50;--k:73"></span><span style="--v:0.15;--k:74"></span><span style="--v:0.30;--k:75"></span><span style="--v:0.30;--k:76"></span><span style="--v:0.00;--k:77"></span><span style="--v:0.00;--k:78"></span><span style="--v:0.15;--k:79"></span><span style="--v:0.15;--k:80"></span><span style="--v:1.00;--k:81"></span><span style="--v:1.00;--k:82"></span><span style="--v:0.00;--k:83"></span><span style="--v:0.00;--k:84"></span><span style="--v:0.00;--k:85"></span><span style="--v:0.30;--k:86"></span><span style="--v:0.70;--k:87"></span><span style="--v:0.15;--k:88"></span><span style="--v:0.50;--k:89"></span><span style="--v:0.50;--k:90"></span><span style="--v:0.70;--k:91"></span><span style="--v:0.30;--k:92"></span><span style="--v:0.70;--k:93"></span><span style="--v:0.15;--k:94"></span><span style="--v:0.00;--k:95"></span><span style="--v:0.70;--k:96"></span><span style="--v:0.00;--k:97"></span><span style="--v:0.00;--k:98"></span><span style="--v:0.30;--k:99"></span><span style="--v:0.00;--k:100"></span><span style="--v:0.70;--k:101"></span><span style="--v:0.70;--k:102"></span><span style="--v:0.30;--k:103"></span><span style="--v:0.15;--k:104"></span><span style="--v:0.00;--k:105"></span><span style="--v:0.15;--k:106"></span><span style="--v:0.30;--k:107"></span><span style="--v:0.70;--k:108"></span><span style="--v:0.50;--k:109"></span><span style="--v:0.15;--k:110"></span><span style="--v:0.70;--k:111"></span><span style="--v:0.50;--k:112"></span><span style="--v:0.00;--k:113"></span><span style="--v:0.15;--k:114"></span><span style="--v:0.00;--k:115"></span><span style="--v:1.00;--k:116"></span><span style="--v:0.00;--k:117"></span><span style="--v:0.70;--k:118"></span><span style="--v:0.00;--k:119"></span><span style="--v:0.15;--k:120"></span><span style="--v:1.00;--k:121"></span><span style="--v:0.50;--k:122"></span><span style="--v:0.50;--k:123"></span><span style="--v:1.00;--k:124"></span><span style="--v:0.00;--k:125"></span></div>
+      <div class="heat-legend">Less
+        <span style="background:rgba(255,122,47,.06)"></span><span style="background:rgba(255,122,47,.3)"></span>
+        <span style="background:rgba(255,122,47,.6)"></span><span style="background:rgba(255,122,47,.96)"></span>More</div>
+    </section>
+
+    <section class="panel regions" style="--i:8">
+      <div class="panel-head"><h2>Top regions</h2><a href="#" class="link">Report</a></div>
+      <ul class="region-list">
+        <li><span class="flag">🇺🇸</span>United States<b>42%</b><div class="bar" style="--accent:#ff7a2f"><span style="--w:42%"></span></div></li>
+        <li><span class="flag">🇮🇳</span>India<b>27%</b><div class="bar" style="--accent:#4f8cff"><span style="--w:27%"></span></div></li>
+        <li><span class="flag">🇩🇪</span>Germany<b>16%</b><div class="bar" style="--accent:#38e0a6"><span style="--w:16%"></span></div></li>
+        <li><span class="flag">🇱🇻</span>Latvia<b>9%</b><div class="bar" style="--accent:#ff4d7d"><span style="--w:9%"></span></div></li>
+      </ul>
+    </section>
+
+    <section class="panel team" style="--i:9">
+      <div class="panel-head"><h2>Team online</h2><span class="pill">6/9</span></div>
+      <ul class="team-list">
+        <li><span class="avatar a1">MR</span>Maya</li>
+        <li><span class="avatar a2">JT</span>Jon</li>
+        <li><span class="avatar a3" style="--st:var(--gold)">LP</span>Lena</li>
+        <li><span class="avatar a4">DO</span>Dev</li>
+        <li><span class="avatar" style="--st:var(--muted)">AK</span>Ana</li>
+        <li><span class="avatar a1">TS</span>Tom</li>
+      </ul>
+    </section>
+
+    <section class="projects">
+      <div class="section-head"><h2>My projects</h2><a href="#" class="link">View all →</a></div>
+      <div class="cards">
+        <article class="card" style="--i:1;--accent:#ff7a2f"><div class="thumb"></div><h3>Website redesign</h3><p>New landing page, pricing and onboarding flow.</p><div class="bar"><span style="--w:78%"></span></div><div class="card-foot"><span>78% · Due Nov 4</span><span class="stack"><span class="avatar a1">MR</span><span class="avatar a2">JT</span></span></div></article>
+        <article class="card" style="--i:2;--accent:#4f8cff"><div class="thumb"></div><h3>Mobile app</h3><p>Ship the first beta to the test group.</p><div class="bar"><span style="--w:45%"></span></div><div class="card-foot"><span>45% · Due Dec 1</span><span class="stack"><span class="avatar a3">LP</span><span class="avatar a4">DO</span></span></div></article>
+        <article class="card" style="--i:3;--accent:#38e0a6"><div class="thumb"></div><h3>Brand guidelines</h3><p>Colors, type and logo usage handbook.</p><div class="bar"><span style="--w:92%"></span></div><div class="card-foot"><span>92% · Due Oct 28</span><span class="stack"><span class="avatar a1">MR</span></span></div></article>
+        <article class="card" style="--i:4;--accent:#ffc94d"><div class="thumb"></div><h3>Data pipeline</h3><p>Move reports to the new warehouse.</p><div class="bar"><span style="--w:30%"></span></div><div class="card-foot"><span>30% · Due Jan 12</span><span class="stack"><span class="avatar a4">DO</span><span class="avatar">SR</span></span></div></article>
+        <article class="card" style="--i:5;--accent:#3fd6e8"><div class="thumb"></div><h3>Help centre</h3><p>Rewrite 40 articles and add search.</p><div class="bar"><span style="--w:60%"></span></div><div class="card-foot"><span>60% · Due Nov 20</span><span class="stack"><span class="avatar a3">LP</span></span></div></article>
+        <article class="card" style="--i:6;--accent:#ff4d7d"><div class="thumb"></div><h3>Customer survey</h3><p>Collect feedback from 500 users.</p><div class="bar"><span style="--w:15%"></span></div><div class="card-foot"><span>15% · Due Feb 3</span><span class="stack"><span class="avatar a2">JT</span><span class="avatar">SR</span></span></div></article>
+      </div>
+    </section>
+
+    <section class="panel tasks" style="--i:6">
+      <div class="panel-head"><h2>My tasks</h2><span class="pill">4 left</span></div>
+      <ul class="task-list">
+        <li><label class="check"><input type="checkbox" checked><span class="box"></span><span class="t">Review homepage mockups</span></label><small>Today</small></li>
+        <li><label class="check"><input type="checkbox"><span class="box"></span><span class="t">Send invoice to Acme Co.</span></label><small>Today</small></li>
+        <li><label class="check"><input type="checkbox"><span class="box"></span><span class="t">Prepare sprint demo</span></label><small>Tomorrow</small></li>
+        <li><label class="check"><input type="checkbox"><span class="box"></span><span class="t">Update API documentation</span></label><small>Thu</small></li>
+        <li><label class="check"><input type="checkbox"><span class="box"></span><span class="t">Interview design candidate</span></label><small>Fri</small></li>
+      </ul>
+    </section>
+
+    <section class="panel activity" style="--i:7">
+      <div class="panel-head"><h2>Recent activity</h2><a href="#" class="link">View all</a></div>
+      <ul class="act-list">
+        <li class="row"><span class="avatar a1">MR</span><div><strong>Maya Reyes</strong><small>Uploaded design system v2</small></div><span class="badge ok">Done</span><small class="when">2m ago</small></li>
+        <li class="row"><span class="avatar a2">JT</span><div><strong>Jon Tate</strong><small>Opened pull request #482</small></div><span class="badge warn">Review</span><small class="when">18m ago</small></li>
+        <li class="row"><span class="avatar a3">LP</span><div><strong>Lena Park</strong><small>Published 6 help articles</small></div><span class="badge ok">Done</span><small class="when">1h ago</small></li>
+        <li class="row"><span class="avatar a4">DO</span><div><strong>Dev Omar</strong><small>Pipeline run failed</small></div><span class="badge bad">Failed</span><small class="when">3h ago</small></li>
+        <li class="row"><span class="avatar">SR</span><div><strong>Sriram</strong><small>Approved Q4 budget</small></div><span class="badge ok">Done</span><small class="when">5h ago</small></li>
+      </ul>
+    </section>
+
+    <section class="panel schedule" style="--i:8">
+      <div class="panel-head"><h2>Today</h2><span class="pill">4 events</span></div>
+      <ul class="timeline">
+        <li><time>09:30</time><div><strong>Team stand-up</strong><small>Meeting room 2</small></div></li>
+        <li><time>11:00</time><div><strong>Design review</strong><small>With Maya &amp; Jon</small></div></li>
+        <li><time>14:00</time><div><strong>Client call · Acme</strong><small>Video call</small></div></li>
+        <li><time>16:30</time><div><strong>Budget sign-off</strong><small>Finance</small></div></li>
+      </ul>
+    </section>
+
+    <section class="panel announce-p" style="--i:9">
+      <div class="panel-head"><h2>Announcements</h2><span class="pill">2 new</span></div>
+      <ul class="announce">
+        <li style="--c:var(--fox)"><strong>Office closed Friday</strong><p>Enjoy the long weekend, back on Monday.</p></li>
+        <li style="--c:var(--blue)"><strong>New design system</strong><p>Components are now in the shared library.</p></li>
+        <li style="--c:var(--mint)"><strong>Q4 planning</strong><p>Add your goals to the doc by Oct 30.</p></li>
+      </ul>
+    </section>
+
+    <section class="panel trend-p" style="--i:10">
+      <div class="panel-head"><h2>Trending contributors</h2><span class="pill">This week</span></div>
+      <ol class="trending">
+        <li><span class="avatar a1">MR</span><div><strong>Maya Reyes</strong><small>Design system</small></div><b>+128</b></li>
+        <li><span class="avatar a2">JT</span><div><strong>Jon Tate</strong><small>Mobile app</small></div><b>+96</b></li>
+        <li><span class="avatar a3">LP</span><div><strong>Lena Park</strong><small>Help centre</small></div><b>+74</b></li>
+        <li><span class="avatar a4">DO</span><div><strong>Dev Omar</strong><small>Data pipeline</small></div><b>+51</b></li>
+      </ol>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* time-aware greeting */
+(function(){
+  var d=new Date(),h=d.getHours();
+  document.getElementById('greet').textContent=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  document.getElementById('greet-date').textContent=d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+})();
+/* KPI count-up */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.kpi-value').forEach(function(el){
+    var end=parseFloat(el.dataset.count),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    var dec=String(end).indexOf('.')>-1,t0=performance.now(),dur=1400;
+    (function tick(t){
+      var p=Math.min((t-t0)/dur,1),v=end*(1-Math.pow(1-p,3));
+      el.textContent=pre+(dec?v.toFixed(1):Math.round(v).toLocaleString())+suf;
+      if(p<1)requestAnimationFrame(tick);
+    })(t0);
+  });
+})();
+</script>
+</body>
+</html>
